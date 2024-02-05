@@ -1,0 +1,92 @@
+import { Key, useEffect, useState } from "react";
+import { supabase } from "../components/supabaseClient";
+import { User } from "../types/user";
+import { Activity } from "../types/activities";
+import Activitycard from "../components/activitycard";
+import { Stack } from "@mui/material";
+
+const Homepage = ({ session }: any) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [enrolledactivities, setEnrolledActivities] = useState<Activity[] | null>(null);
+  const [activities, setActivities] = useState<Activity[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [fetchError, setFetchError] = useState<string|null>(null)
+
+  useEffect(() => {
+    setLoading(true);
+    const getuser = async () => {
+      const { data: userdata, error } = await supabase
+        .from("profiles")
+        .select()
+        .eq("id", (await supabase.auth.getUser()).data.user?.id)
+        .single()
+      
+      if (error){
+        setFetchError(error.message)
+      }
+      if (userdata){
+        setUser(userdata);
+        setFetchError(null);
+      }
+    };
+    
+    getuser();
+    const getactivities = async () => {
+      const { data: activities } = await supabase
+        .from("activities")
+        .select()
+        .order('created_at', {ascending:false})
+        
+      setActivities(activities);
+    };
+    getactivities();
+
+    const getenrolledactivities = async () => {
+      const { data: enrolledactivities } = await supabase
+        .from("profiles")
+        .select("activities(*)")
+        .eq("id",(await supabase.auth.getUser()).data.user?.id)
+        .single()
+        const activities :Activity[]|null= enrolledactivities? enrolledactivities.activities :null
+      setEnrolledActivities(activities);
+    };
+    getenrolledactivities();
+    setLoading(false);
+  }, []);
+  return (
+    <>
+      <h1>Welcome {user?.username}</h1>
+      {fetchError && <p>{fetchError}</p>}
+      {!activities && !loading && <div>No Activites available</div>}
+      {!activities && loading && <div>Loading...</div>}
+      <h2>Your enrolled activities</h2>
+      <Stack
+        spacing={{ xs: 1, sm: 2 }}
+        direction="row"
+        useFlexGap
+        flexWrap="wrap"
+      >
+        {enrolledactivities &&
+          enrolledactivities.map((activity, index) => (
+            <Activitycard key={index} activity={activity} />
+          ))}
+      </Stack>
+      <h2>Explore more activities!</h2>
+      {/*Activity cards*/}
+      <Stack
+        spacing={{ xs: 1, sm: 2 }}
+        direction="row"
+        useFlexGap
+        flexWrap="wrap"
+      >
+        {activities &&
+          activities.map((activity, index) => (
+            <Activitycard key={index} activity={activity} />
+          ))}
+      </Stack>
+      {/*End of Activity cards*/}
+    </>
+  );
+};
+
+export default Homepage;
