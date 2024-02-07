@@ -3,9 +3,12 @@ import { deepOrange, green, grey, orange, purple, teal } from "@mui/material/col
 
 
   export const lightTheme = createTheme({
+  
     spacing: 4,
     components: {
+      
       MuiToolbar: {
+        
           styleOverrides: {
               dense: {
                   height: 60,
@@ -13,7 +16,8 @@ import { deepOrange, green, grey, orange, purple, teal } from "@mui/material/col
               }
           }
       }
-  },
+  }
+  ,
     palette: {
         background : {
         },

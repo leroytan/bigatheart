@@ -68,7 +68,7 @@ const Homepage = ({ session }: any) => {
       >
         {enrolledactivities &&
           enrolledactivities.map((activity, index) => (
-            <Activitycard key={index} activity={activity} />
+            <Activitycard key={index} activity={activity} joined={true}/>
           ))}
       </Stack>
       <h2>Explore more activities!</h2>
@@ -81,7 +81,7 @@ const Homepage = ({ session }: any) => {
       >
         {activities &&
           activities.map((activity, index) => (
-            <Activitycard key={index} activity={activity} />
+            <Activitycard key={index} activity={activity} joined={false}/>
           ))}
       </Stack>
       {/*End of Activity cards*/}

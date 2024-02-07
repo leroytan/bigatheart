@@ -43,7 +43,7 @@ function NavBar() {
 
   return (
     <ThemeProvider theme={lightTheme}>
-      <AppBar position="static">
+      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters variant="dense">
             <Typography

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { supabase } from "./components/supabaseClient";
 import Account from "./pages/account";
 import { Session } from "@supabase/supabase-js";
@@ -13,7 +13,7 @@ import Signup from "./components/signup";
 import NavBar from "./components/navbar";
 import Homepage from "./pages/homepage";
 import ActivityPage from "./pages/activitypage";
-
+export const UserSession = createContext<Session | null>(null)
 function App() {
   const [session, setSession] = useState<Session | null>(null);
 
@@ -26,8 +26,9 @@ function App() {
       setSession(session);
     });
   }, []);
-
+  
   return (
+    <UserSession.Provider value = {session}>
     <BrowserRouter>
       <Routes>
         <Route>
@@ -63,7 +64,6 @@ function App() {
                 <Signin />
               ) : (
                 <>
-                  <NavBar />
                   <ActivityPage />
                 </>
               )
@@ -85,6 +85,7 @@ function App() {
         </Route>
       </Routes>
     </BrowserRouter>
+    </UserSession.Provider>
   );
 }
 
