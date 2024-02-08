@@ -12,8 +12,9 @@ import MenuItem from "@mui/material/MenuItem";
 import { Link, useNavigate } from "react-router-dom";
 import { ThemeProvider } from "@mui/material";
 import { lightTheme } from "../theme";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { supabase } from "./supabaseClient";
+import { Userinfo } from "../App";
 
 function NavBar() {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ function NavBar() {
     () => supabase.auth.signOut(),
   ];
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const user = useContext(Userinfo);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -43,7 +45,10 @@ function NavBar() {
 
   return (
     <ThemeProvider theme={lightTheme}>
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <AppBar
+        position="fixed"
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      >
         <Container maxWidth="xl">
           <Toolbar disableGutters variant="dense">
             <Typography
@@ -87,7 +92,7 @@ function NavBar() {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="User" src="/static/images/avatar/2.jpg" />
+                  <Avatar alt={user?.username} src="/static/images/avatar/2.jpg" />
                 </IconButton>
               </Tooltip>
               <Menu

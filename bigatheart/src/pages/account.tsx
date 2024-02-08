@@ -1,6 +1,6 @@
 import { useState, useEffect, SetStateAction } from "react";
 import { supabase } from "../components/supabaseClient";
-import { Box, Button, Grid, TextField, ThemeProvider } from "@mui/material";
+import { Box, Button, Grid, TextField, ThemeProvider, Toolbar } from "@mui/material";
 import { lightTheme } from "../theme";
 
 export default function Account({ session }: any) {
@@ -68,6 +68,7 @@ export default function Account({ session }: any) {
 
   return (
     <ThemeProvider theme={lightTheme}>
+      <Toolbar/>
       <Box component="form" noValidate onSubmit={updateProfile} sx={{ mt: 3 }}>
         <Grid item xs={12} sm={6}>
           <TextField

@@ -1,56 +1,68 @@
 import {
   Box,
   CssBaseline,
-  AppBar,
   Toolbar,
   Typography,
   Drawer,
   List,
   ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
   Divider,
 } from "@mui/material";
 import NavBar from "./navbar";
-import { FC, ReactNode } from "react";
-
-const Sidenavbar = (prop:{ children:any, changepagenumber: (number: number) => void}) => {
+export const userbuttons = [
+  "Announcements",
+  "Submit attendance",
+  "Certificate",
+];
+export const adminbuttons = [];
+const Sidenavbar = (prop: {
+  children: any;
+  changepagenumber: (number: number) => void;
+}) => {
   const drawerWidth = 240;
+  
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <NavBar/>
-        <Toolbar>
-          <Typography variant="h6" noWrap component="div">
-            Clipped drawer
-          </Typography>
-        </Toolbar>
+      <NavBar />
+      <Toolbar>
+        <Typography variant="h6" noWrap component="div">
+          Clipped drawer
+        </Typography>
+      </Toolbar>
       <Drawer
         variant="permanent"
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+          [`& .MuiDrawer-paper`]: {
+            width: drawerWidth,
+            boxSizing: "border-box",
+          },
         }}
       >
         <Toolbar />
-        <Box sx={{ overflow: 'auto' }}>
+        <Box sx={{ overflow: "auto" }}>
           <List>
-            {['Announcements', 'Starred', 'Submit attendance', 'Certificate'].map((text, index) => (
+            {userbuttons.map((text, index) => (
               <ListItem key={text} disablePadding>
-                <ListItemButton onClick={()=>prop.changepagenumber(index)}>
+                <ListItemButton onClick={() => prop.changepagenumber(index)}>
                   <ListItemText primary={text} />
                 </ListItemButton>
               </ListItem>
             ))}
-            
           </List>
           <Divider />
           <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
+            {adminbuttons.map((text, index) => (
               <ListItem key={text} disablePadding>
-                <ListItemButton onClick={()=>prop.changepagenumber(index+5)}>
+                <ListItemButton
+                  onClick={() =>
+                    prop.changepagenumber(index + userbuttons.length)
+                  }
+                >
                   <ListItemText primary={text} />
                 </ListItemButton>
               </ListItem>

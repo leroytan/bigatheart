@@ -40,9 +40,11 @@ export default function SignUp() {
         emailRedirectTo: 'http://localhost:5173/welcome'
       }
     })
-    console.log(email, error)
-    console.log(password, error)
-    console.log(data, error)
+    if (error){
+      alert(error.message)
+    }else{
+      alert("Check your email for verification")
+    }
   }
 
   signUpNewUser(data.get('email')?.toString()!, data.get('password')?.toString()!);
