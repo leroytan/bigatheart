@@ -41,9 +41,10 @@ const Homepage = ({ session }: any) => {
     getenrolledactivities();
     setLoading(false);
   }, []);
+
   return (
     <>
-    <Toolbar/>
+      <Toolbar />
       <h1>Welcome {user?.username}</h1>
       {fetchError && <p>{fetchError}</p>}
       {!activities && !loading && <div>No Activites available</div>}
@@ -69,9 +70,11 @@ const Homepage = ({ session }: any) => {
         flexWrap="wrap"
       >
         {activities &&
-          activities.map((activity, index) => (
-            <Activitycard key={index} activity={activity} joined={false} />
-          ))}
+          enrolledactivities &&
+          activities
+            .map((activity, index) => (
+              <Activitycard key={index} activity={activity} joined={false} />
+            ))}
       </Stack>
       {/*End of Activity cards*/}
     </>

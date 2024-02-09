@@ -1,14 +1,33 @@
 import { useState, useEffect, SetStateAction } from "react";
 import { supabase } from "../components/supabaseClient";
-import { Box, Button, Grid, TextField, ThemeProvider, Toolbar } from "@mui/material";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  Grid,
+  TextField,
+  ThemeProvider,
+  Toolbar,
+} from "@mui/material";
 import { lightTheme } from "../theme";
-
+import { Skills } from "../types/skills";
+//the update skills is not yet working
 export default function Account({ session }: any) {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState<string | null>(null);
   const [website, setWebsite] = useState<string | null>(null);
   const [avatar_url, setAvatarUrl] = useState(null);
-
+  const [allskills, setAllskills] = useState<Skills[] | null>(null);
+  const getallskills = async () => {
+    const { data, error } = await supabase.from("skills").select("*");
+    if (error) {
+      alert(error.message);
+    } else {
+      setAllskills(data);
+    }
+  };
   useEffect(() => {
     let ignore = false;
     async function getProfile() {
@@ -35,6 +54,7 @@ export default function Account({ session }: any) {
     }
 
     getProfile();
+    getallskills();
 
     return () => {
       ignore = true;
@@ -51,24 +71,43 @@ export default function Account({ session }: any) {
     const updates = {
       id: user.id,
       username:
-        data.get("firstName")?.toString()! + " " + data.get("lastName")?.toString()!,
+        data.get("firstName")?.toString()! +
+        " " +
+        data.get("lastName")?.toString()!,
       website,
       avatar_url,
       updated_at: new Date(),
     };
 
     const { error } = await supabase.from("profiles").upsert(updates);
-
+    const skills = [
+      {
+        profile_id: user.id,
+        skills_id: 11,
+      },
+    ];
+    const { error: error2 } = await supabase
+      .from("profile_skills")
+      .upsert(skills);
     if (error) {
       alert(error.message);
-    } else {
+    } else if (error2) {
+      alert(error2.message);
     }
     setLoading(false);
+  };
+  const [skillselected, setskillselected] = useState<boolean[]>([]);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setskillselected({
+      ...skillselected,
+      [event.target.name]: event.target.checked,
+    });
   };
 
   return (
     <ThemeProvider theme={lightTheme}>
-      <Toolbar/>
+      <Toolbar />
       <Box component="form" noValidate onSubmit={updateProfile} sx={{ mt: 3 }}>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -102,6 +141,26 @@ export default function Account({ session }: any) {
             autoComplete="family-name"
           />
         </Grid>
+        <br />
+        <Divider />
+        Select your skills!
+        {allskills &&
+          allskills!.map((skills, index) => {
+            return (
+              <Grid item xs={12} sm={6}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={skillselected[index]}
+                      onChange={handleChange}
+                      name="jason"
+                    />
+                  }
+                  label={skills.title}
+                />
+              </Grid>
+            );
+          })}
         <Button type="submit" disabled={loading}>
           {loading ? "Loading ..." : "Update"}
         </Button>

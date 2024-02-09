@@ -9,6 +9,8 @@ import NavBar from "./components/navbar";
 import Homepage from "./pages/homepage";
 import ActivityPage from "./pages/activitypage";
 import { User } from "./types/user";
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 export const UserSession = createContext<Session | null>(null);
 export const Userinfo = createContext<User | null>(null);
 function App() {
@@ -31,6 +33,7 @@ function App() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      getuser();
     });
 
     supabase.auth.onAuthStateChange((_event, session) => {
@@ -42,6 +45,7 @@ function App() {
   return (
     <UserSession.Provider value={session}>
       <Userinfo.Provider value={user}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
         <BrowserRouter>
           <Routes>
             <Route>
@@ -98,6 +102,7 @@ function App() {
             </Route>
           </Routes>
         </BrowserRouter>
+        </LocalizationProvider>
       </Userinfo.Provider>
     </UserSession.Provider>
   );

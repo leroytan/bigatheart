@@ -25,6 +25,7 @@ const Activitycard = (prop: { activity: Activity; joined: boolean }) => {
       console.log("failed to join");
     } else {
       console.log("user has joined");
+      window.location.reload();
     }
   };
   return (
