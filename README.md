@@ -36,7 +36,7 @@ Follow these instructions to get a copy of FORUMTEER up and running on your loca
 
     ```
     VITE_DB_URL="https://qsbjygajkdarymyjyzat.supabase.co"
-    VITE_DB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFzYmp5Z2Fqa2RhcnlteWp5emF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDY2MDg3ODksImV4cCI6MjAyMjE4NDc4OX0.44BfRkcLdeR-         3Ux5ygIbTZFUVI0wurRqY3BviGmjEJw"
+    VITE_DB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFzYmp5Z2Fqa2RhcnlteWp5emF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDY2MDg3ODksImV4cCI6MjAyMjE4NDc4OX0.44BfRkcLdeR-3Ux5ygIbTZFUVI0wurRqY3BviGmjEJw"
     ``` 
     
     This configures your environment to connect to the Supabase backend.
