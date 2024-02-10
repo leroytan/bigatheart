@@ -16,30 +16,42 @@ Follow these instructions to get a copy of FORUMTEER up and running on your loca
 
 1. Clone the repository
 
-   `git clone https://github.com/leroytan/bigatheart`git clone <URL>
+   ```
+   git clone https://github.com/leroytan/bigatheart
+   ```
    
-2.  Navigate to the project directory
+3.  Navigate to the project directory
     
-    ```cd bigatheart/bigatheart```
+    ```
+    cd bigatheart/bigatheart
+    ```
     
-3.  Install NPM packages
+5.  Install NPM packages
     
-    `npm install` 
+    ```
+    npm install
+    ``` 
     
-4.  Create a `.env` file in the root directory of the project and add the following lines:
+7.  Create a ```.env``` file in the root directory of the project and add the following lines:
 
-    `VITE_DB_URL="https://qsbjygajkdarymyjyzat.supabase.co"
-VITE_DB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFzYmp5Z2Fqa2RhcnlteWp5emF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDY2MDg3ODksImV4cCI6MjAyMjE4NDc4OX0.44BfRkcLdeR-3Ux5ygIbTZFUVI0wurRqY3BviGmjEJw"` 
+    ```
+    VITE_DB_URL="https://qsbjygajkdarymyjyzat.supabase.co"
+    VITE_DB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFzYmp5Z2Fqa2RhcnlteWp5emF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDY2MDg3ODksImV4cCI6MjAyMjE4NDc4OX0.44BfRkcLdeR-         3Ux5ygIbTZFUVI0wurRqY3BviGmjEJw"
+    ``` 
     
     This configures your environment to connect to the Supabase backend.
     
-5.  Start the development server
+8.  Start the development server
     
-    `npm run dev` 
+    ```
+    npm run dev
+    ``` 
     
-6.  Open your web browser and navigate to the URL provided in the console output, usually
+10.  Open your web browser and navigate to the URL provided in the console output, usually
     
-    `http://localhost:3000/` 
+    ```
+    http://localhost:3000/
+    ``` 
     
 
 ## Usage
