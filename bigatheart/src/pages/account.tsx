@@ -13,13 +13,15 @@ import {
 } from "@mui/material";
 import { lightTheme } from "../theme";
 import { Skills } from "../types/skills";
+import { Session } from "@supabase/supabase-js";
 //the update skills is not yet working
-export default function Account({ session }: any) {
+export default function Account(props: { session: Session }) {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState<string | null>(null);
   const [website, setWebsite] = useState<string | null>(null);
   const [avatar_url, setAvatarUrl] = useState(null);
   const [allskills, setAllskills] = useState<Skills[] | null>(null);
+  const [userskills, setUserskills] = useState<any[] | null>(null);
   const getallskills = async () => {
     const { data, error } = await supabase.from("skills").select("*");
     if (error) {
@@ -28,11 +30,31 @@ export default function Account({ session }: any) {
       setAllskills(data);
     }
   };
+  const getuserskills = async () => {
+    const { data, error } = await supabase
+      .from("profile_skills")
+      .select("*")
+      .eq("profile_id", props.session.user.id);
+    if (error) {
+      alert(error.message);
+    } else {
+      setUserskills(data);
+    }
+  };
+  const deletepreviousskills = async () => {
+    const { error } = await supabase
+      .from("profile_skills")
+      .delete()
+      .eq("profile_id", props.session.user.id);
+      if (error){
+        alert(error.message);
+      }
+  };
   useEffect(() => {
     let ignore = false;
     async function getProfile() {
       setLoading(true);
-      const { user } = session;
+      const { user } = props.session;
 
       const { data, error } = await supabase
         .from("profiles")
@@ -55,18 +77,27 @@ export default function Account({ session }: any) {
 
     getProfile();
     getallskills();
+    getuserskills();
 
     return () => {
       ignore = true;
     };
-  }, [session]);
-
+  }, [props.session]);
+  useEffect(() => {
+    setSelected(
+      userskills
+        ? userskills!.map(({ skills_id }) => {
+            return skills_id;
+          })
+        : []
+    );
+  }, [userskills]);
   const updateProfile = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
     setLoading(true);
-    const { user } = session;
+    const { user } = props.session;
 
     const updates = {
       id: user.id,
@@ -80,12 +111,14 @@ export default function Account({ session }: any) {
     };
 
     const { error } = await supabase.from("profiles").upsert(updates);
-    const skills = [
-      {
+    await deletepreviousskills(); //deletes the record before we insert the new ones
+    const skills = selected.map((skillid) => {
+      return {
         profile_id: user.id,
-        skills_id: 11,
-      },
-    ];
+        skills_id: skillid,
+      };
+    });
+    
     const { error: error2 } = await supabase
       .from("profile_skills")
       .upsert(skills);
@@ -95,15 +128,22 @@ export default function Account({ session }: any) {
       alert(error2.message);
     }
     setLoading(false);
+    window.location.reload();
   };
-  const [skillselected, setskillselected] = useState<boolean[]>([]);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setskillselected({
-      ...skillselected,
-      [event.target.name]: event.target.checked,
-    });
+  //for the checkboxes
+  const [selected, setSelected] = useState<number[]>([]);
+  const handlechange = (id: number) => {
+    var temp = selected.slice();
+    if (selected.includes(id)) {
+      temp = temp.filter((idinarray) => idinarray != id);
+      setSelected(temp);
+    } else {
+      temp.push(id);
+      setSelected(temp);
+    }
+    console.log(temp);
   };
+  //end of checkboxes
 
   return (
     <ThemeProvider theme={lightTheme}>
@@ -115,7 +155,7 @@ export default function Account({ session }: any) {
             fullWidth
             id="email"
             name="email"
-            value={session.user.email}
+            value={props.session.user.email}
             hiddenLabel
             disabled
           />
@@ -145,15 +185,15 @@ export default function Account({ session }: any) {
         <Divider />
         Select your skills!
         {allskills &&
-          allskills!.map((skills, index) => {
+          allskills!.map((skills) => {
             return (
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} key={skills.id}>
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={skillselected[index]}
-                      onChange={handleChange}
-                      name="jason"
+                      checked={selected.includes(Number(skills.id))}
+                      onChange={() => handlechange(Number(skills.id))}
+                      name={skills.id}
                     />
                   }
                   label={skills.title}

@@ -5,6 +5,7 @@ import { Activity } from "../types/activities";
 import Activitycard from "../components/activitycard";
 import { Stack, Toolbar } from "@mui/material";
 import { Userinfo } from "../App";
+import { Skills } from "../types/skills";
 
 const Homepage = ({ session }: any) => {
   const user = useContext(Userinfo);
@@ -14,18 +15,32 @@ const Homepage = ({ session }: any) => {
   const [activities, setActivities] = useState<Activity[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
+  const [allskills, setAllskills] = useState<Skills[] | null>(null);
+  const getactivities = async () => {
+    const { data: activities } = await supabase
+      .from("activities")
+      .select(
+        `"*"`
+      )
+      .order("created_at", { ascending: false })
+      .returns<Activity[]>();
+
+    setActivities(activities);
+  };
+  const getallskills = async () => {
+    const { data, error } = await supabase.from("skills").select("*");
+    if (error) {
+      alert(error.message);
+    } else {
+      setAllskills(data);
+    }
+  };
 
   useEffect(() => {
     setLoading(true);
-    const getactivities = async () => {
-      const { data: activities } = await supabase
-        .from("activities")
-        .select()
-        .order("created_at", { ascending: false });
 
-      setActivities(activities);
-    };
     getactivities();
+    getallskills();
 
     const getenrolledactivities = async () => {
       const { data: enrolledactivities } = await supabase
@@ -71,10 +86,9 @@ const Homepage = ({ session }: any) => {
       >
         {activities &&
           enrolledactivities &&
-          activities
-            .map((activity, index) => (
-              <Activitycard key={index} activity={activity} joined={false} />
-            ))}
+          activities.map((activity, index) => (
+            <Activitycard key={index} activity={activity} joined={false} />
+          ))}
       </Stack>
       {/*End of Activity cards*/}
     </>

@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import CertificateViewer from "../components/certificateviewer";
 import { supabase } from "../components/supabaseClient";
 import { Activity } from "../types/activities";
-import Attendanceform from "../components/attendanceform";
 import Attendance from "../components/attendance";
 
 const ActivityPage = () => {
